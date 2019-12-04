@@ -144,9 +144,28 @@ const Mutation = {
       author: {
         id:userId
       }});
+    const isPublished = await prisma.exists.Post(
+      {id: args.id,
+        published: true,
+      author: {
+        id:userId
+      }});
+      
     if(!postExists){
       throw new Error('Unable to update post');
     };
+
+       
+    if(isPublished && args.data.published === false){
+      prisma.mutation.deleteManyComments({
+        where:{
+          postId: {
+            id: args.id
+          }
+        }
+      }); 
+    };
+
     return await prisma.mutation.updatePost({
       where:{
         id: args.id
@@ -160,6 +179,7 @@ const Mutation = {
     const userId = getUserId(request);
     const postExists = await prisma.exists.Post({
       id: data.postId,
+      published: true,
       author: {
         id: userId
       }});
