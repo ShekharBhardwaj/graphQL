@@ -2,7 +2,12 @@ import getUserId from '../utils/getUserId';
 
 const Query = {
   users(parent, args, { prisma }, info) {
-    const opArgs = {};
+    const opArgs = {
+      first: args.first,
+      skip: args.skip,
+      after: args.after,
+      orderBy: args.orderBy
+    };
 
     if (args.query) {
       opArgs.where = {
@@ -17,7 +22,12 @@ const Query = {
     return prisma.query.users(opArgs, info);
   },
   posts(parent, args, { prisma }, info) {
-    const opArgs = {};
+    const opArgs = {
+      first: args.first,
+      skip: args.skip,
+      after: args.after,
+      orderBy: args.orderBy
+    };
 
     if (args.query) {
       opArgs.where = {
@@ -71,7 +81,13 @@ const Query = {
 
 
   comments(parent, args, { prisma }, info) {
-    return prisma.query.comments(null, info)
+    const opArgs = {
+      first: args.first,
+      skip: args.skip,
+      after: args.after,
+      orderBy: args.orderBy
+    }
+    return prisma.query.comments(opArgs, info)
   }
 };
 
